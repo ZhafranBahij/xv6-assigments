@@ -1,2 +1,7 @@
 # xv6-assigments
-Kumpulan tugas mata kuliah OS 
+Nama : Muhammad Zhafran Bahij
+NIM : 1313619012
+
+# Tugas
+Link untuk hasil screenshot : <a href="run_screenshots">run_screenshots</a>
+
