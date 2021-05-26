@@ -486,3 +486,11 @@ index 84bd80b..6ee47b8 100644
 +SYSCALL(setgid)
 +SYSCALL(getprocs)
 ```
+
+<h2>Some File</h2>
+Beberapa file yang ditambahkan 
+<ul>
+ <li>ps.c</li>
+ <li>testtest2.c</li>
+ <li>testsetuid.c</li>
+</ul>
