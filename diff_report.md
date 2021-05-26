@@ -1,4 +1,4 @@
-#Code Modification Report
+<h1>Code Modification</h1>
 
 <h2>defs.h</h2>
 
@@ -473,3 +473,148 @@ index 57fb797..99fd107 100644
 \ No newline at end of file
 ```
 
+<h2>sysproc.c</h2>
+
+```diff
+diff --git a/sysproc.c b/sysproc.c
+index 8292584..e562cfe 100644
+--- a/sysproc.c
++++ b/sysproc.c
+@@ -9,6 +9,9 @@
+ #ifdef PDX_XV6
+ #include "pdx-kernel.h"
+ #endif // PDX_XV6
++#ifdef CS333_P2
++#include "uproc.h"
++#endif // CS333_P2
+
+ int
+ sys_fork(void)
+@@ -112,3 +115,62 @@ sys_date(void){
+ }
+
+ #endif // CS333_P1 //munculin date
++#ifdef CS333_P2
++int sys_getuid(void)
++{
++  return myproc()->uid;
++}
++int sys_getgid(void)
++{
++  return myproc()->gid;
++}
++int sys_getppid(void)
++{
++  if (myproc()->parent == NULL)
++    return myproc()->pid;
++  else
++    return myproc()->parent->pid;
++}
++int sys_setuid(void)
++{
++  int test;
++  if (argint(0, &test) < 0)
++    return -1;
++  if (test < 0 || test > 32767)
++    return -1;
++  else
++  {
++    myproc()->uid = test;
++    return 0;
++  }
++}
++int sys_setgid(void)
++{
++  int test;
++  if (argint(0, &test) < 0)
++    return -1;
++  if (test < 0 || test > 32767)
++    return -1;
++  else
++  {
++    myproc()->gid = test;
++    return 0;
++  }
++}
++int sys_getprocs(void)
++{
++  struct uproc *p;
++  int max;
++
++  if (argint(0, &max) < 0)
++  {
++    return -1;
++  }
++  if (argptr(1, (void *)&p, max * sizeof(struct uproc) < 0))
++  {
++    return -1;
++  }
++
++  return getprocs(max, p);
++}
++#endif
+\ No newline at end of file
+```
+
+<h2>uproc.h</h2>
+
+```diff
+diff --git a/uproc.h b/uproc.h
+index 997ec25..fc8b6e9 100644
+--- a/uproc.h
++++ b/uproc.h
+@@ -1,6 +1,5 @@
+-#ifndef UPROC_H
+-#define UPROC_H
+ #define STRMAX 32
++#include "types.h"
+
+ struct uproc {
+   uint pid;
+```
+
+<h2>user.h</h2>
+
+```diff
+diff --git a/user.h b/user.h
+index 094e533..f7d4c9a 100644
+--- a/user.h
++++ b/user.h
+@@ -46,4 +46,15 @@ int strncmp(const char*, const char*, uint);
+
+ #ifdef CS333_P1
+ int date(struct rtcdate*);
+-#endif // CS333_P1 Munculin date
+\ No newline at end of file
++#endif // CS333_P1 Munculin date
++
++#ifdef CS333_P2
++uint getuid(void); //UID of the current process
++uint getgid(void); //GID of the current process
++uint getppid(void); //proccess ID of the parent Process
++
++int setuid(uint); //set UID
++int setgid(uint); //set GID
++
++int getprocs(uint max, struct uproc *table); //Get proc
++#endif // CS333_P2
+```
+
+<h2>usys.S</h2>
+
+```diff
+diff --git a/usys.S b/usys.S
+index 84bd80b..6ee47b8 100644
+--- a/usys.S
++++ b/usys.S
+@@ -31,3 +31,9 @@ SYSCALL(sleep)
+ SYSCALL(uptime)
+ SYSCALL(halt)
+ SYSCALL(date)
++SYSCALL(getuid)
++SYSCALL(getgid)
++SYSCALL(getppid)
++SYSCALL(setuid)
++SYSCALL(setgid)
++SYSCALL(getprocs)
+```
