@@ -1,4 +1,4 @@
-# Assignment 1 Operating System Class
+# Assignment 2 Operating System Class
 
 <h1>Identitas</h1>
 Nama : Muhammad Zhafran Bahij </br>
